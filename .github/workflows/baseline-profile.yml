@@ -23,6 +23,11 @@ on:
 # Read more at https://docs.github.com/en/actions/security-guides/encrypted-secrets
 
 # Jobs to executed on GitHub machines
+
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
 
   # Job name
