@@ -22,12 +22,10 @@ import com.skydoves.gemini.BuildConfig
 import com.skydoves.gemini.core.datastore.PreferenceDataStore
 import com.skydoves.gemini.di.ChatEntryPoint
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.api.ChatClientConfig
 import io.getstream.chat.android.client.logger.ChatLogLevel
 import io.getstream.chat.android.models.ConnectionData
 import io.getstream.chat.android.models.User
-import io.getstream.chat.android.offline.plugin.factory.StreamOfflinePluginFactory
-import io.getstream.chat.android.state.plugin.config.StatePluginConfig
-import io.getstream.chat.android.state.plugin.factory.StreamStatePluginFactory
 import io.getstream.log.streamLog
 import io.getstream.result.call.Call
 import javax.inject.Inject
@@ -52,18 +50,13 @@ class StreamChatInitializer : Initializer<Unit> {
      * e.g, connect/disconnect user to the server, send/update/pin message, etc.
      */
     val logLevel = if (BuildConfig.DEBUG) ChatLogLevel.ALL else ChatLogLevel.NOTHING
-    val offlinePluginFactory = StreamOfflinePluginFactory(
-      appContext = context
-    )
-    val statePluginFactory = StreamStatePluginFactory(
-      config = StatePluginConfig(
-        backgroundSyncEnabled = true,
-        userPresence = true
-      ),
-      appContext = context
-    )
     val chatClient = ChatClient.Builder(BuildConfig.STREAM_API_KEY, context)
-      .withPlugins(offlinePluginFactory, statePluginFactory)
+      .config(
+        ChatClientConfig(
+          offlineEnabled = true,
+          userPresence = true
+        )
+      )
       .logLevel(logLevel)
       .build()
 

@@ -18,9 +18,9 @@ package com.skydoves.gemini.initializer
 
 import android.content.Context
 import androidx.startup.Initializer
+import com.skydoves.gemini.BuildConfig
+import io.getstream.log.AndroidStreamLogger
 import io.getstream.log.Priority
-import io.getstream.log.android.AndroidStreamLogger
-import io.getstream.log.android.BuildConfig
 import io.getstream.log.streamLog
 
 class StreamLogInitializer : Initializer<Unit> {

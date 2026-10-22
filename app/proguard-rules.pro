@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# androidx.window references device-provided extension classes that are not on the build classpath
+-dontwarn androidx.window.extensions.area.ExtensionWindowAreaPresentation

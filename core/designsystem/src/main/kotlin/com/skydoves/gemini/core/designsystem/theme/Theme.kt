@@ -20,9 +20,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
-import com.skydoves.gemini.core.designsystem.chat.GeminiReactionFactory
+import com.skydoves.gemini.core.designsystem.chat.geminiReactionResolver
+import io.getstream.chat.android.compose.ui.theme.ChatComponentFactory
 import io.getstream.chat.android.compose.ui.theme.ChatTheme
-import io.getstream.chat.android.compose.ui.theme.StreamColors
+import io.getstream.chat.android.compose.ui.theme.StreamDesign
 
 /** Light Android background theme */
 private val LightAndroidBackgroundTheme = BackgroundTheme(color = Color.White)
@@ -33,6 +34,7 @@ private val DarkAndroidBackgroundTheme = BackgroundTheme(color = BACKGROUND900)
 @Composable
 fun GeminiComposeTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
+  componentFactory: ChatComponentFactory = object : ChatComponentFactory {},
   content: @Composable () -> Unit
 ) {
   val backgroundTheme = if (darkTheme) DarkAndroidBackgroundTheme else LightAndroidBackgroundTheme
@@ -40,22 +42,27 @@ fun GeminiComposeTheme(
   CompositionLocalProvider(
     LocalBackgroundTheme provides backgroundTheme
   ) {
+    // Own message bubbles take their background from the brand scale's s100 step.
     val streamColors = if (darkTheme) {
-      StreamColors.defaultDarkColors().copy(
-        appBackground = BACKGROUND900,
-        primaryAccent = STREAM_PRIMARY,
-        ownMessagesBackground = STREAM_PRIMARY
+      StreamDesign.Colors.defaultDark(
+        brand = StreamDesign.ColorScale.defaultDark().copy(s100 = STREAM_PRIMARY)
+      ).copy(
+        backgroundCoreApp = BACKGROUND900,
+        accentPrimary = STREAM_PRIMARY
       )
     } else {
-      StreamColors.defaultColors().copy(
-        primaryAccent = STREAM_PRIMARY,
-        ownMessagesBackground = STREAM_PRIMARY_LIGHT
+      StreamDesign.Colors.default(
+        brand = StreamDesign.ColorScale.defaultLight().copy(s100 = STREAM_PRIMARY_LIGHT)
+      ).copy(
+        accentPrimary = STREAM_PRIMARY
       )
     }
 
     ChatTheme(
+      isInDarkMode = darkTheme,
       colors = streamColors,
-      reactionIconFactory = GeminiReactionFactory(),
+      componentFactory = componentFactory,
+      reactionResolver = geminiReactionResolver(),
       content = content
     )
   }
