@@ -4,10 +4,11 @@ import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.gradle.api.plugins.ExtensionAware
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 /**
  * Configure base Kotlin with Android options
@@ -16,7 +17,7 @@ internal fun Project.configureKotlinAndroid(
   commonExtension: CommonExtension<*, *, *, *, *, *>,
 ) {
   commonExtension.apply {
-    compileSdk = 32
+    compileSdk = 36
 
     defaultConfig {
       minSdk = 21
@@ -29,13 +30,18 @@ internal fun Project.configureKotlinAndroid(
 
     lint {
       abortOnError = false
+      // The Compose 1.6 runtime lint check that hilt-navigation-compose brings in can't read
+      // the Kotlin 2.1 metadata of kotlinx-coroutines 1.10 and crashes lint.
+      disable += "FlowOperatorInvokedInComposition"
     }
+  }
 
-    kotlinOptions {
+  extensions.configure<KotlinAndroidProjectExtension> {
+    compilerOptions {
       // Treat all Kotlin warnings as errors (disabled by default)
-      allWarningsAsErrors = properties["warningsAsErrors"] as? Boolean ?: false
+      allWarningsAsErrors.set(properties["warningsAsErrors"] as? Boolean ?: false)
 
-      freeCompilerArgs = freeCompilerArgs + listOf(
+      freeCompilerArgs.addAll(
         "-Xcontext-receivers",
         "-opt-in=kotlin.RequiresOptIn",
         // Enable experimental coroutines APIs, including Flow
@@ -45,12 +51,7 @@ internal fun Project.configureKotlinAndroid(
         "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
       )
 
-      // Set JVM target to 1.8
-      jvmTarget = JavaVersion.VERSION_17.toString()
+      jvmTarget.set(JvmTarget.JVM_17)
     }
   }
-}
-
-fun CommonExtension<*, *, *, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
-  (this as ExtensionAware).extensions.configure("kotlinOptions", block)
 }

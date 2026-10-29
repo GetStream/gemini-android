@@ -40,7 +40,7 @@ fun GeminiSmallTopBar(title: String) {
       )
     },
     colors = TopAppBarDefaults.mediumTopAppBarColors(
-      containerColor = ChatTheme.colors.primaryAccent
+      containerColor = ChatTheme.colors.accentPrimary
     )
   )
 }

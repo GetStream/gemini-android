@@ -17,12 +17,12 @@
 package com.skydoves.gemini.core.network.di
 
 import com.skydoves.gemini.core.network.service.ChannelService
+import com.skydoves.geminu.core.network.BuildConfig
 import com.skydoves.sandwich.retrofit.adapters.ApiResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.getstream.log.android.BuildConfig
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import okhttp3.OkHttpClient

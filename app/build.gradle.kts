@@ -68,6 +68,7 @@ android {
       }
       isShrinkResources = true
       isMinifyEnabled = true
+      proguardFiles("proguard-rules.pro")
     }
 
     create("benchmark") {

@@ -22,6 +22,10 @@ plugins {
 
 android {
   namespace = "com.skydoves.geminu.core.network"
+
+  buildFeatures {
+    buildConfig = true
+  }
 }
 
 dependencies {
