@@ -34,7 +34,7 @@ jobs:
   generate-baseline-profiles:
 
     # Operating system where the job gets to be executed
-    runs-on: macos-latest
+    runs-on: { group: scaleway-macos }
 
     # Job steps
     steps:
